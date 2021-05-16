@@ -1,10 +1,11 @@
 import React, { useReducer } from 'react'
 import Cookies from 'js-cookie'
-import { login } from '../../api/login'
+
 import { UserContext } from './userContext'
 import { UserReducer } from './userReducer'
 import { LOGIN_USER } from '../types'
 import { verifyTokenApi } from '../../api/verifyTokenApi'
+import { queryGraphql } from '../../api/QueryGraphql'
 
 function UserState({ children }) {
   console.log('storage', localStorage.getItem('NoteAppUser'))
@@ -55,16 +56,18 @@ function UserState({ children }) {
   const loginUser = async (username, password) => {
     console.log('status now')
     try {
-      const response = await login(username, password)
-        .then((res) => res)
-        .catch((e) => {
-          console.log(e)
+      const response = await queryGraphql
+        .loginGql(username, password)
+        .then((res) => res.data.loginUser)
+        .catch((err) => {
+          console.log(err)
         })
+      console.log(response, 'QLlogin')
 
-      if (!response.status === 200) {
+      if (!response.id) {
         return await response.json()
       }
-      const { token, id } = await response.json()
+      const { token, id } = response
       console.log(id, token)
       if (response) {
         console.log('COOKIE')

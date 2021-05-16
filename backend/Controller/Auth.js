@@ -10,36 +10,35 @@ const NoteApiAddUser = (id) => {
   })
 }
 class Auth {
-  async registrationUser(req, res) {
-    const serviceRes = await fetch(`${AuthService}/auth/reg`, {
+  async registrationUser(input) {
+    const { message, id } = await fetch(`${AuthService}/auth/reg`, {
       method: 'POST',
-      body: JSON.stringify(req.body),
+      body: JSON.stringify(input),
       headers: { 'Content-Type': 'application/json' },
     })
       .then((respApi) => respApi.json())
       .then((respApiJson) => respApiJson)
-    if (serviceRes.id) {
-      res.status(201).json(serviceRes)
-      NoteApiAddUser(serviceRes.id)
+    if (id) {
+      return { message, id }
+      NoteApiAddUser(id)
     } else {
-      res.status(400).json(serviceRes)
+      return { message }
     }
   }
-  async loginUser(req, res) {
-    const {user} = await fetch(`${AuthService}/auth/login`, {
+  async loginUser(input) {
+    const { user, message } = await fetch(`${AuthService}/auth/login`, {
       method: 'POST',
-      body: JSON.stringify(req.body),
+      body: JSON.stringify(input),
       headers: { 'Content-Type': 'application/json' },
-    })
-      .then((respApi) => respApi.json())
-      
+    }).then((respApi) => respApi.json())
 
     const { token } = await fetch('http://localhost:3080/create', {
       method: 'POST',
       body: JSON.stringify(user),
       headers: { 'Content-Type': 'application/json' },
     }).then((respApi) => respApi.json())
-    res.json({ id: user.id, token })
+
+    return user ? { message, id: user.id, token } : { message }
   }
 }
 

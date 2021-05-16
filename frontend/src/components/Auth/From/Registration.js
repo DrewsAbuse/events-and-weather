@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { registration } from '../../../api/registration'
+import { queryGraphql } from '../../../api/QueryGraphql'
 
 function Registration() {
   const {
@@ -13,7 +13,7 @@ function Registration() {
   const onSubmit = async (formData) => {
     const { username, password } = formData
     console.log(username, password)
-    const { message } = await registration(username, password).then((message) => message.json())
+    const { message } = await queryGraphql.registrationQgl(username, password).then((res) => res.data.registrationUser)
     setMessage(message)
   }
 

@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import './Styles/App.scss'
 import App from './components/App/App'
 import { UserState } from './context/user/UserState'
+
 ReactDOM.render(
   <UserState>
     <BrowserRouter>

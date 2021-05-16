@@ -1,11 +1,17 @@
 const express = require('express')
+const { ApolloServer } = require('apollo-server-express')
 const { fork } = require('child_process')
 const cors = require('cors')
-const app = express()
-
 const port = 5000
+const app = express()
+const { typeDefs } = require('./SchemaGraphQL/TypeDefs')
+const { resolvers } = require('./SchemaGraphQL/Resolvers')
+const server = new ApolloServer({ typeDefs, resolvers })
+server.applyMiddleware({ app })
 const notesRouter = require('./Router/notesRouter')
-
+require('dns').lookup(require('os').hostname(), function (err, add, fam) {
+  console.log('addr: ' + add)
+})
 const authentication = require('./Controller/Auth')
 app.use(cors())
 app.use(express.json())
