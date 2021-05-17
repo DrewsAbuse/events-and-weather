@@ -9,10 +9,11 @@ export const NoteTable = ({ User }) => {
 
   useEffect(() => {
     console.log('table next fetch Note(user)')
+
     fetchNotes(User)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [User])
+  }, [notes])
 
   return (
     <>

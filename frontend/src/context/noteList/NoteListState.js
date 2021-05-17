@@ -3,7 +3,7 @@ import { removeNoteAPI, addNoteAPI, fetchNotesAPI } from '../../api/NoteListApi'
 import { NoteListContext } from './noteListContext'
 import { NoteListReducer } from './noteListReducer'
 import { ADD_NOTE, FETCH_NOTES, REMOVE_NOTE, SHOW_LOADER } from '../types'
-
+import { queryGraphql } from '../../api/QueryGraphql'
 export const NoteListState = ({ children }) => {
   const initialState = {
     notes: [],
@@ -14,10 +14,12 @@ export const NoteListState = ({ children }) => {
   const showLoader = () => dispatch({ type: SHOW_LOADER })
 
   const fetchNotes = async (User) => {
-    const response = await fetchNotesAPI(User).then((res) => res)
-
-    if (response.status === 200) {
-      const { notes } = await response.json()
+    const { notes, message } = await queryGraphql.fetchNotesAPI(User).then((res) => {
+      console.log(res)
+      return res.data.notesById
+    })
+    console.log(message, notes)
+    if (notes) {
       console.log('NOTES  is STATE', notes)
 
       if (notes.lenght === 0) {
@@ -42,24 +44,25 @@ export const NoteListState = ({ children }) => {
     }
 
     try {
-      const { id } = await addNoteAPI(note).then((res) => res.json())
+      showLoader()
+      const id = await queryGraphql.addNote(note).then((res) => res.data.addNote)
       const payload = {
         ...note,
-        note_id: id,
+        id: id,
       }
       console.log(note, 'ID is', id)
       dispatch({ type: ADD_NOTE, payload })
     } catch (e) {
       throw new Error(e.message)
     }
-    fetchNotes(User)
   }
   const clearNotes = async () => {
     const payload = []
     dispatch({ type: FETCH_NOTES, payload })
   }
   const removeNote = async (id, User) => {
-    await removeNoteAPI(id, User)
+    showLoader()
+    await queryGraphql.deleteNotesGql(id, User)
 
     dispatch({
       type: REMOVE_NOTE,

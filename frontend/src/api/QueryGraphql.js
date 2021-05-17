@@ -42,6 +42,66 @@ class QueryGraphql {
         return result
       })
   }
+  async fetchNotesAPI(User) {
+    try {
+      return await client
+        .query({
+          query: gql`
+            query {
+              notesById(id: ${JSON.stringify(User._id)}) {
+                message
+                notes{
+                id
+                title
+                event_date
+                region
+                description
+                user_id
+                is_complete
+                }
+               
+              }
+            }
+          `,
+        })
+        .then((result) => result)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  async deleteNotesGql(note_id, User) {
+    return await client
+      .mutate({
+        mutation: gql`
+          mutation {
+            deleteNote(note_id: ${note_id}, user_id: ${JSON.stringify(User._id)}) {
+              message
+            }
+          }
+        `,
+      })
+      .then((result) => {
+        console.log(result, 'QL RES')
+        return result
+      })
+  }
+  async addNote(note) {
+    console.log(note)
+    return await client
+      .mutate({
+        mutation: gql`
+          mutation {
+            addNote(input: note) {
+              id
+            }
+          }
+        `,
+      })
+      .then((result) => {
+        console.log(result, 'QL RES')
+        return result
+      })
+  }
 }
 const queryGraphql = new QueryGraphql()
 

@@ -4,25 +4,25 @@ const fetch = require('node-fetch')
 
 console.log('Class note init')
 class Notes {
-  async createNote(req, res) {
+  async createNote(note) {
     try {
       const serviceRes = await fetch(`http://localhost:8080/notes`, {
         method: 'POST',
-        body: JSON.stringify(req.body),
+        body: JSON.stringify(note),
         headers: { 'Content-Type': 'application/json' },
       })
         .then((respApi) => respApi.json())
         .then((respApi) => respApi)
-
-      res.status(201).json(serviceRes)
+      console.log(serviceRes)
+      return serviceRes
     } catch (error) {
       console.log(error)
     }
   }
 
-  async deleteNote(req, res) {
+  async deleteNote(id) {
     try {
-      const serviceRes = await fetch(`http://localhost:8080/notes/${req.params.id}`, {
+      const serviceRes = await fetch(`http://localhost:8080/notes/${id}`, {
         method: 'DELETE',
 
         headers: { 'Content-Type': 'application/json' },
@@ -30,21 +30,21 @@ class Notes {
         .then((respApi) => respApi.json())
         .then((respApi) => respApi)
 
-      res.status(201).json(serviceRes)
+      return serviceRes
     } catch (error) {
       console.log(error)
     }
   }
-  async fetchNoteByUser(req, res) {
+  async fetchNoteByUser(id) {
     try {
-      const serviceRes = await fetch(`http://localhost:8080/notes/${req.params.userId}`, {
+      const serviceRes = await fetch(`http://localhost:8080/notes/${id}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       })
         .then((respApi) => respApi.json())
         .then((respApi) => respApi)
 
-      res.status(200).json(serviceRes)
+      return serviceRes
     } catch (error) {
       res.status(500)
     }

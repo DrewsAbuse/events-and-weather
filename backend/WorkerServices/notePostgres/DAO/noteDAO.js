@@ -10,8 +10,9 @@ class NoteDAO {
   }
 
   async createNote(NoteJson) {
-    const [id] = await db('notes').insert(NoteJson).returning('id')
-    return id
+    const note = await db('notes').insert(NoteJson).returning('*')
+    console.log('DAO', note)
+    return note
   }
 
   async getAllByHash(user_id) {

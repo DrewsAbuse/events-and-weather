@@ -23,8 +23,9 @@ class NoteController {
   }
   async createNote(req, res) {
     try {
-      const id = await noteService.createNote(req.body.note)
-      res.status(201).json({ message: `Successful, note created id - ${id}`, id: `${id}`})
+      const note = await noteService.createNote(req.body)
+
+      res.status(201).json({ message: `Successful, note created id - ${note[0].id}`, note: note[0] })
     } catch (error) {
       res.status(500)
       console.log(error)

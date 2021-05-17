@@ -5,6 +5,7 @@ const fetchNotesAPI = (User) => {
   try {
     return fetch(`${server}/notes/${User._id}`, {
       method: 'GET',
+      mode: 'cors',
       headers: {
         Authorization: `${Cookie.get('Authorization')}`,
         'Content-Type': 'application/json',
