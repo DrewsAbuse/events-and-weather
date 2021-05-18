@@ -1,6 +1,6 @@
-const { secret } = require('../secret') // !!! "secret"
+const { secret } = require('./secret') // !!! "secret"
 const jwt = require('jsonwebtoken')
-function generateAccessToken(id, roles, username) {
+const generateAccessToken = (id, roles, username, jwt = jwt) => {
   try {
     const payload = {
       id,
@@ -13,11 +13,11 @@ function generateAccessToken(id, roles, username) {
   }
 }
 
-const create = async (req, res) => {
+const create = async (req, res, jwt = jwt, generateToken = generateAccessToken) => {
   try {
     const { id, role, username } = req.body
     console.log(id, role, username)
-    const token = generateAccessToken(id, role, username)
+    const token = generateToken(id, role, username)
 
     res.status(201).json({ token: token })
   } catch (error) {
@@ -25,7 +25,7 @@ const create = async (req, res) => {
     console.log(error)
   }
 }
-const verify = async (req, res) => {
+const verify = async (req, res, jwt = jwt) => {
   const token = req.headers.authorization.split(' ')[1]
 
   try {

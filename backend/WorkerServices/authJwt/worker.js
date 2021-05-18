@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const port = 3080
-const { verify, create } = require('./token')
+const { verify, create } = require('./Token')
 
 app.use(express.json())
 app.use(cors())
